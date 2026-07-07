@@ -13,6 +13,8 @@ export const metadata: Metadata = {
 
 import { CartProvider } from "@/context/CartContext";
 
+import { SpeedInsights } from "@vercel/speed-insights/next";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -24,6 +26,7 @@ export default function RootLayout({
           <CartProvider>
             <Navbar />
             {children}
+            <SpeedInsights />
           </CartProvider>
       </body>
     </html>
