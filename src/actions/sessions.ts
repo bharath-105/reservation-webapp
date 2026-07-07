@@ -1,46 +1,11 @@
 'use server';
 
-import { adminAuth } from '@/lib/firebase-admin';
-import { cookies } from 'next/headers';
+import { requireAuth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 
-async function ensureUser() {
-  const cookieStore = await cookies();
-  const sessionCookie = cookieStore.get('session')?.value;
-
-  if (!sessionCookie) {
-    throw new Error('Unauthorized');
-  }
-
-  let decodedClaims;
-  try {
-    decodedClaims = await adminAuth.verifySessionCookie(sessionCookie, true);
-  } catch (error) {
-    throw new Error('Unauthorized');
-  }
-
-  const firebaseUid = decodedClaims.uid;
-  const phone = decodedClaims.phone_number || null;
-
-  // Create or update the user in our database
-  const dbUser = await prisma.user.upsert({
-    where: { firebaseUid },
-    update: {
-      phone: phone,
-    },
-    create: {
-      firebaseUid,
-      name: 'Guest',
-      phone: phone,
-    },
-  });
-
-  return dbUser;
-}
-
 export async function getOrCreateSession(tableNumber: string) {
-  const dbUser = await ensureUser();
+  const dbUser = await requireAuth();
 
   // Ensure table exists
   const table = await prisma.table.upsert({
@@ -74,7 +39,7 @@ export async function getOrCreateSession(tableNumber: string) {
 }
 
 export async function requestToJoin(sessionId: string) {
-  const dbUser = await ensureUser();
+  const dbUser = await requireAuth();
 
   const existingRequest = await prisma.joinRequest.findFirst({
     where: { sessionId, userId: dbUser.id },
@@ -94,7 +59,7 @@ export async function requestToJoin(sessionId: string) {
 }
 
 export async function getMyJoinStatus(sessionId: string) {
-  const dbUser = await ensureUser();
+  const dbUser = await requireAuth();
 
   const request = await prisma.joinRequest.findFirst({
     where: { sessionId, userId: dbUser.id },
@@ -105,7 +70,7 @@ export async function getMyJoinStatus(sessionId: string) {
 }
 
 export async function getPendingRequests(sessionId: string) {
-  const dbUser = await ensureUser();
+  const dbUser = await requireAuth();
   
   // Verify is host
   const session = await prisma.tableSession.findUnique({ where: { id: sessionId } });
@@ -118,7 +83,7 @@ export async function getPendingRequests(sessionId: string) {
 }
 
 export async function resolveJoinRequest(requestId: string, status: 'APPROVED' | 'REJECTED') {
-  const dbUser = await ensureUser();
+  const dbUser = await requireAuth();
 
   const request = await prisma.joinRequest.findUnique({
     where: { id: requestId },

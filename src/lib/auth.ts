@@ -1,28 +1,31 @@
-import { adminAuth } from '@/lib/firebase-admin';
-import { cookies } from 'next/headers';
+import { createClient } from '@/lib/supabase/server';
 import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
 
 export async function requireAuth() {
-  const cookieStore = await cookies();
-  const sessionCookie = cookieStore.get('session')?.value;
+  const supabase = await createClient();
+  const { data: { user }, error } = await supabase.auth.getUser();
 
-  if (!sessionCookie) {
+  if (error || !user) {
     redirect('/sign-in');
   }
 
-  try {
-    const decodedClaims = await adminAuth.verifySessionCookie(sessionCookie, true);
-    const dbUser = await prisma.user.findUnique({
-      where: { firebaseUid: decodedClaims.uid },
+  // Get or create user in Prisma
+  let dbUser = await prisma.user.findUnique({
+    where: { supabaseUid: user.id }
+  });
+
+  if (!dbUser) {
+    dbUser = await prisma.user.create({
+      data: {
+        supabaseUid: user.id,
+        phone: user.phone || user.email,
+        name: user.user_metadata?.name || 'Customer'
+      }
     });
-    if (!dbUser) {
-      redirect('/sign-in');
-    }
-    return dbUser;
-  } catch (error) {
-    redirect('/sign-in');
   }
+
+  return dbUser;
 }
 
 export async function requireRole(allowedRoles: string[]) {

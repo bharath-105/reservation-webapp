@@ -1,43 +1,10 @@
 'use server';
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
-import { adminAuth } from '@/lib/firebase-admin';
-import { cookies } from 'next/headers';
-
-async function ensureUser() {
-  const cookieStore = await cookies();
-  const sessionCookie = cookieStore.get('session')?.value;
-
-  if (!sessionCookie) {
-    throw new Error('Unauthorized');
-  }
-
-  let decodedClaims;
-  try {
-    decodedClaims = await adminAuth.verifySessionCookie(sessionCookie, true);
-  } catch (error) {
-    throw new Error('Unauthorized');
-  }
-
-  const firebaseUid = decodedClaims.uid;
-  const phone = decodedClaims.phone_number || null;
-
-  // Create or update the user in our database
-  return await prisma.user.upsert({
-    where: { firebaseUid },
-    update: {
-      phone: phone,
-    },
-    create: {
-      firebaseUid,
-      name: 'Guest',
-      phone: phone,
-    },
-  });
-}
+import { requireAuth } from '@/lib/auth';
 
 export async function createOrder(sessionId: string, items: { id: string, price: number, quantity: number }[]) {
-  const dbUser = await ensureUser();
+  const dbUser = await requireAuth();
   const totalAmount = items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
 
   const order = await prisma.order.create({
