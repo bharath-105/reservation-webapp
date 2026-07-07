@@ -12,6 +12,11 @@ export default function SignInPage() {
   const supabase = createClient();
 
   const handleAuth = async (isSignUp: boolean) => {
+    if (!email || !password) {
+      setError('Please enter both email and password.');
+      return;
+    }
+
     setLoading(true);
     setError('');
     
