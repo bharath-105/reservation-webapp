@@ -52,15 +52,6 @@ export default async function AdminDashboard() {
         </div>
       </div>
 
-      <div className="glass" style={{ padding: '32px', borderRadius: '24px' }}>
-        <h2 style={{ fontSize: '24px', fontWeight: 700, marginBottom: '16px' }}>Quick Actions</h2>
-        <div style={{ display: 'flex', gap: '16px' }}>
-          <button className="btn-primary" style={{ padding: '16px 32px' }}>Manage Menu</button>
-          <button className="btn-primary" style={{ padding: '16px 32px', background: 'transparent', border: '1px solid var(--primary)', color: 'white' }}>Manage Inventory</button>
-          <button className="btn-primary" style={{ padding: '16px 32px', background: 'transparent', border: '1px solid var(--primary)', color: 'white' }}>View Audit Logs</button>
-        </div>
-      </div>
-
       <UserManagement users={users} />
     </div>
   );
