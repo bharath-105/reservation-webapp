@@ -10,7 +10,7 @@ datasource db {
 
 model User {
   id            String         @id @default(uuid())
-  supabaseUid   String         @unique
+  clerkId       String         @unique
   name          String?
   phone         String?        @unique
   role          String         @default("CUSTOMER") // CUSTOMER, WAITER, KITCHEN, CASHIER, ADMIN
