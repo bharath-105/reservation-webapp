@@ -7,6 +7,7 @@ const isProtectedRoute = createRouteMatcher([
   '/table(.*)',
   '/waiter(.*)',
   '/order(.*)',
+  '/menu(.*)',
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
