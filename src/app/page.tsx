@@ -32,7 +32,7 @@ export default function Home() {
           <div style={{ background: 'rgba(255,255,255,0.1)', padding: '12px', borderRadius: '12px', marginBottom: '24px', fontSize: '24px' }}>🎸</div>
           <h2 style={{ fontSize: '28px', marginBottom: '12px' }}>Experiences</h2>
           <p style={{ opacity: 0.7, marginBottom: '32px', flex: 1 }}>Discover live jazz music, exclusive brewery tours, and VIP rooftop events happening every weekend.</p>
-          <Link href="/experiences" style={{ width: '100%' }}>
+          <Link href="#" style={{ width: '100%' }}>
             <button className="btn-primary" style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', boxShadow: 'none' }}>Explore Events</button>
           </Link>
         </div>
@@ -41,7 +41,7 @@ export default function Home() {
           <div style={{ background: 'rgba(255,255,255,0.1)', padding: '12px', borderRadius: '12px', marginBottom: '24px', fontSize: '24px' }}>📍</div>
           <h2 style={{ fontSize: '28px', marginBottom: '12px' }}>Locations</h2>
           <p style={{ opacity: 0.7, marginBottom: '32px', flex: 1 }}>Find a BLR Cafe destination near you. Currently pouring in Indiranagar and Koramangala.</p>
-          <Link href="/destinations" style={{ width: '100%' }}>
+          <Link href="#" style={{ width: '100%' }}>
             <button className="btn-primary" style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', boxShadow: 'none' }}>View Destinations</button>
           </Link>
         </div>

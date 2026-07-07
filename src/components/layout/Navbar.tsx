@@ -8,9 +8,6 @@ export default function Navbar() {
         BLR Cafe
       </Link>
       <div className={styles.links}>
-        <Link href="/experiences" className={styles.link}>Experiences</Link>
-        <Link href="/restaurant" className={styles.link}>Restaurant</Link>
-        <Link href="/destinations" className={styles.link}>Destinations</Link>
         <Link href="/cashier" className={styles.link}>POS</Link>
         <Link href="/table?id=1" className="btn-primary" style={{ padding: '10px 20px', marginLeft: '16px', borderRadius: '10px', textDecoration: 'none' }}>
           Table Ordering
