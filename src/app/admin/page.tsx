@@ -1,5 +1,6 @@
 import { requireRole } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import UserManagement from '@/components/admin/UserManagement';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,6 +15,11 @@ export default async function AdminDashboard() {
 
   const categoriesCount = await prisma.category.count();
   const menuItemsCount = await prisma.menuItem.count();
+
+  // Fetch all users ordered by newest first
+  const users = await prisma.user.findMany({
+    orderBy: { createdAt: 'desc' }
+  });
 
   return (
     <div style={{ maxWidth: '1200px', margin: '140px auto', padding: '0 24px' }}>
@@ -54,6 +60,8 @@ export default async function AdminDashboard() {
           <button className="btn-primary" style={{ padding: '16px 32px', background: 'transparent', border: '1px solid var(--primary)', color: 'white' }}>View Audit Logs</button>
         </div>
       </div>
+
+      <UserManagement users={users} />
     </div>
   );
 }
